@@ -61,28 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Modern Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Tailwind CSS Components -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        health: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 
-                            300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9', 
-                            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e'
-                        }
-                    },
-                    fontFamily: { inter: ['Inter', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
+    <?php include_once __DIR__ . '/../includes/tailwind_config.php'; ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body class="bg-health-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
+<body class="bg-slate-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
     <?php include_once '../includes/header.php'; ?>
 
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
@@ -90,21 +74,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
             <!-- Header Section -->
-            <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                        <span class="w-12 h-12 rounded-2xl bg-health-600 flex items-center justify-center shadow-lg shadow-health-200">
-                            <i class="fas fa-syringe text-white text-xl"></i>
-                        </span>
-                        New Immunization Record
-                    </h1>
-                    <p class="text-slate-500 font-medium flex items-center gap-2">
-                        <i class="fas fa-baby text-health-400"></i>
-                        Tracking vaccination progress for Kibenes infants
-                    </p>
+            <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 bg-health-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-health-200/50 text-2xl">
+                        <i class="fas fa-syringe"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Record Immunization</h1>
+                        <p class="text-slate-500 font-medium mt-1">New vaccination administration entry</p>
+                    </div>
                 </div>
                 <a href="../immunization_records.php" 
-                   class="inline-flex items-center gap-2 px-6 py-3 bg-white text-slate-600 rounded-2xl font-bold transition-all hover:bg-slate-50 border border-slate-200 shadow-sm active:scale-95">
+                   class="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-50 text-slate-600 rounded-2xl font-bold transition-all hover:bg-slate-100 border border-slate-200 active:scale-95 text-sm">
                     <i class="fas fa-arrow-left"></i>
                     Back to Records
                 </a>
@@ -129,19 +110,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-user-md text-health-600"></i>
+                            <i class="fas fa-baby text-health-600"></i>
                         </div>
                         <div>
                             <h2 class="text-xl font-bold text-slate-800">Primary Information</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Infant and vaccine identification</p>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infant and vaccine identification</p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                         <div>
-                            <label for="baby_id" class="form-label-premium">Infant Profile <span class="text-rose-500">*</span></label>
+                            <label for="baby_id" class="form-label-premium">Infant Profile <span class="text-rose-500 font-black">*</span></label>
                             <div class="relative group">
-                                <select name="baby_id" id="baby_id" class="form-input-premium appearance-none pr-10" required>
+                                <select name="baby_id" id="baby_id" class="form-input-premium appearance-none pr-12" required>
                                     <option value="">Select an infant</option>
                                     <?php foreach ($babies as $baby): ?>
                                         <option value="<?php echo $baby['id']; ?>" <?php echo ($babyId == $baby['id']) ? 'selected' : ''; ?>>
@@ -154,15 +135,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
                             </div>
-                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="baby_id_warning">
-                                Please select an infant profile
+                            <div class="hidden mt-2 p-3 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-xl border border-rose-100 items-center gap-2" id="baby_id_warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Please select an infant profile</span>
                             </div>
                         </div>
 
                         <div>
-                            <label for="vaccine_id" class="form-label-premium">Vaccine Type <span class="text-rose-500">*</span></label>
+                            <label for="vaccine_id" class="form-label-premium">Vaccine Type <span class="text-rose-500 font-black">*</span></label>
                             <div class="relative group">
-                                <select name="vaccine_id" id="vaccine_id" class="form-input-premium appearance-none pr-10" required>
+                                <select name="vaccine_id" id="vaccine_id" class="form-input-premium appearance-none pr-12" required>
                                     <option value="">Select vaccine</option>
                                     <?php foreach ($vaccines as $vac): ?>
                                         <option value="<?php echo $vac['id']; ?>">
@@ -175,8 +157,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
                             </div>
-                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="vaccine_id_warning">
-                                Please select a vaccine type
+                            <div class="hidden mt-2 p-3 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-xl border border-rose-100 items-center gap-2" id="vaccine_id_warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Please select a vaccine type</span>
                             </div>
                         </div>
                     </div>
@@ -190,35 +173,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <h2 class="text-xl font-bold text-slate-800">Administration Details</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Dose timing and scheduling</p>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Dose timing and scheduling</p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
                         <div>
-                            <label for="dose_number" class="form-label-premium">Dose Number <span class="text-rose-500">*</span></label>
-                            <input type="number" name="dose_number" id="dose_number" class="form-input-premium font-bold text-center" value="1" min="1" required>
-                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="dose_number_warning">
-                                Required
+                            <label for="dose_number" class="form-label-premium">Dose Number <span class="text-rose-500 font-black">*</span></label>
+                            <div class="relative group">
+                                <i class="fas fa-hashtag absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-health-500 transition-colors"></i>
+                                <input type="number" name="dose_number" id="dose_number" class="form-input-premium pl-12 font-bold" value="1" min="1" required>
+                            </div>
+                            <div class="hidden mt-2 p-3 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-xl border border-rose-100 items-center gap-2" id="dose_number_warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Required</span>
                             </div>
                         </div>
 
                         <div>
-                            <label for="date_given" class="form-label-premium">Date Administered <span class="text-rose-500">*</span></label>
-                            <input type="date" name="date_given" id="date_given" class="form-input-premium font-black text-health-700" value="<?php echo date('Y-m-d'); ?>" required>
-                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="date_given_warning">
-                                Required
+                            <label for="date_given" class="form-label-premium">Date Administered <span class="text-rose-500 font-black">*</span></label>
+                            <div class="relative group">
+                                <i class="fas fa-calendar-day absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-health-500 transition-colors"></i>
+                                <input type="date" name="date_given" id="date_given" class="form-input-premium pl-12 font-black text-health-700" value="<?php echo date('Y-m-d'); ?>" required>
+                            </div>
+                            <div class="hidden mt-2 p-3 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-xl border border-rose-100 items-center gap-2" id="date_given_warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Required</span>
                             </div>
                         </div>
 
                         <div>
-                            <label for="next_due_date" class="form-label-premium text-emerald-700 group flex items-center gap-2">
+                            <label for="next_due_date" class="form-label-premium flex items-center gap-2">
                                 Next Dose Due 
-                                <span class="text-[10px] bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full font-black uppercase">Optional</span>
+                                <span class="text-[9px] bg-slate-100 text-slate-400 px-2 py-0.5 rounded-full font-black uppercase tracking-tighter">Optional</span>
                             </label>
-                            <input type="date" name="next_due_date" id="next_due_date" class="form-input-premium border-emerald-100 focus:border-emerald-500 focus:ring-emerald-200">
-                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="next_due_date_warning">
-                                Must be after administration date
+                            <div class="relative group">
+                                <i class="fas fa-calendar-check absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-emerald-500 transition-colors"></i>
+                                <input type="date" name="next_due_date" id="next_due_date" class="form-input-premium pl-12 border-emerald-50 focus:border-emerald-500 focus:ring-emerald-500/10">
+                            </div>
+                            <div class="hidden mt-2 p-3 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-xl border border-rose-100 items-center gap-2" id="next_due_date_warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Must be after administration date</span>
                             </div>
                         </div>
                     </div>
@@ -231,28 +226,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="fas fa-comment-medical text-health-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Additional Remarks</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Notes on reaction or observations</p>
+                            <h2 class="text-xl font-bold text-slate-800">Clinical Remarks</h2>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Notes on reaction or observations</p>
                         </div>
                     </div>
 
-                    <div>
-                        <textarea name="remarks" id="remarks" class="form-input-premium min-h-[120px] py-4 leading-relaxed" placeholder="Record any reactions, side effects, or special instructions here..."></textarea>
+                    <div class="mt-8">
+                        <textarea name="remarks" id="remarks" class="form-input-premium min-h-[140px] py-5 px-6 leading-relaxed" placeholder="Record any reactions, side effects, patient response or special instructions here..."></textarea>
                     </div>
                 </section>
 
                 <!-- Form Actions -->
                 <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8 pb-12">
                     <button type="button" onclick="window.history.back()" 
-                            class="w-full sm:w-auto px-10 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-200 transition-all active:scale-95">
-                        Cancel Changes
+                            class="w-full sm:w-auto px-10 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all active:scale-95">
+                        Discard Changes
                     </button>
                     <button type="submit" 
-                            class="w-full sm:w-auto px-16 py-4 bg-health-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-health-700 shadow-xl shadow-health-200 transition-all active:scale-95 flex items-center justify-center gap-3">
-                        <i class="fas fa-save shadow-sm"></i>
-                        Record Immunization
+                            class="w-full sm:w-auto px-16 py-4 bg-health-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-health-700 shadow-xl shadow-health-200/50 transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <i class="fas fa-save shadow-sm text-sm"></i>
+                        Save Immunization Record
                     </button>
                 </div>
+            </form>
             </form>
         </main>
     </div>
