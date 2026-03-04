@@ -65,6 +65,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <style type="text/tailwindcss">
+        @layer components {
+            .section-header {
+                @apply flex items-center gap-3 py-4 border-b border-slate-100 mb-6;
+            }
+            .section-icon {
+                @apply w-10 h-10 bg-health-50 text-health-600 rounded-xl flex items-center justify-center text-lg;
+            }
+            .form-input-premium {
+                @apply w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-health-500 focus:ring-4 focus:ring-health-500/10 outline-none transition-all duration-200 bg-white;
+            }
+            .form-label-premium {
+                @apply block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1;
+            }
+            .card-premium {
+                @apply bg-white rounded-[2rem] border border-slate-100 shadow-sm shadow-slate-200/50 p-8;
+            }
+            .info-box {
+                @apply bg-slate-50 rounded-2xl p-6 border border-slate-100;
+            }
+        }
+    </style>
 </head>
 <body class="bg-slate-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
     <?php include_once '../includes/header.php'; ?>
@@ -74,34 +96,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
             <!-- Header Section -->
-            <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
                 <div class="flex items-center gap-5">
                     <div class="w-14 h-14 bg-health-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-health-200/50 text-2xl">
                         <i class="fas fa-syringe"></i>
                     </div>
                     <div>
                         <h1 class="text-3xl font-black text-slate-900 tracking-tight">Record Immunization</h1>
-                        <p class="text-slate-500 font-medium mt-1">New vaccination administration entry</p>
+                        <p class="text-slate-500 font-medium mt-1">Professional clinical administration entry</p>
                     </div>
                 </div>
                 <a href="../immunization_records.php" 
-                   class="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-50 text-slate-600 rounded-2xl font-bold transition-all hover:bg-slate-100 border border-slate-200 active:scale-95 text-sm">
+                   class="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-50 text-slate-600 rounded-2xl font-bold transition-all hover:bg-slate-100 border border-slate-200 active:scale-95 text-xs uppercase tracking-widest">
                     <i class="fas fa-arrow-left"></i>
                     Back to Records
                 </a>
-            </header>
+            </div>
 
+            <!-- Alerts -->
             <?php if ($message): ?>
-                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-4 text-emerald-700 font-bold animate-in fade-in slide-in-from-top-4 duration-500">
-                    <i class="fas fa-check-circle text-emerald-500 text-xl"></i>
-                    <?php echo $message; ?>
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p class="font-bold text-sm"><?php echo $message; ?></p>
                 </div>
             <?php endif; ?>
 
             <?php if ($error): ?>
-                <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-center gap-4 text-rose-700 font-bold animate-in fade-in slide-in-from-top-4 duration-500">
-                    <i class="fas fa-exclamation-circle text-rose-500 text-xl"></i>
-                    <?php echo $error; ?>
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 flex items-center gap-3 text-rose-800 animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <p class="font-bold text-sm"><?php echo $error; ?></p>
                 </div>
             <?php endif; ?>
 
@@ -118,7 +145,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <?php 
+                    $selectedBaby = null;
+                    if ($babyId) {
+                        foreach ($babies as $b) {
+                            if ($b['id'] == $babyId) {
+                                $selectedBaby = $b;
+                                break;
+                            }
+                        }
+                    }
+                    ?>
+
+                    <?php if ($selectedBaby): ?>
+                        <div class="info-box flex flex-col md:flex-row items-start md:items-center gap-6 mb-8 mt-8">
+                            <div class="w-16 h-16 bg-health-600 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-health-200">
+                                <i class="fas fa-child-rearing"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-1">
+                                    <p class="text-xs text-health-600 font-black uppercase tracking-[0.2em]">Verified Patient Profile</p>
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                </div>
+                                <h3 class="text-2xl font-black text-slate-900 tracking-tight">
+                                    <?php echo htmlspecialchars($selectedBaby['first_name'] . ' ' . $selectedBaby['last_name']); ?>
+                                </h3>
+                                <div class="flex flex-wrap gap-4 mt-2">
+                                    <div class="flex items-center gap-2 text-slate-500 font-bold text-xs uppercase tracking-widest">
+                                        <i class="far fa-calendar-alt text-health-500"></i>
+                                        Born: <?php echo date('M d, Y', strtotime($selectedBaby['birth_date'])); ?>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-slate-500 font-bold text-xs uppercase tracking-widest">
+                                        <i class="fas fa-id-badge text-health-500"></i>
+                                        ID: WBMS-INF-<?php echo str_pad($selectedBaby['id'], 4, '0', STR_PAD_LEFT); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="baby_id" value="<?php echo $babyId; ?>">
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="grid grid-cols-1 <?php echo $selectedBaby ? 'md:grid-cols-1' : 'md:grid-cols-2'; ?> gap-8 mt-8">
+                        <?php if (!$selectedBaby): ?>
                         <div>
                             <label for="baby_id" class="form-label-premium">Infant Profile <span class="text-rose-500 font-black">*</span></label>
                             <div class="relative group">
@@ -140,6 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <span>Please select an infant profile</span>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                         <div>
                             <label for="vaccine_id" class="form-label-premium">Vaccine Type <span class="text-rose-500 font-black">*</span></label>
@@ -236,8 +305,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </section>
 
-                <!-- Form Actions -->
-                <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8 pb-12">
+                <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8">
                     <button type="button" onclick="window.history.back()" 
                             class="w-full sm:w-auto px-10 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all active:scale-95">
                         Discard Changes
@@ -249,11 +317,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </div>
             </form>
-            </form>
         </main>
     </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
