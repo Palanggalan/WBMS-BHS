@@ -169,8 +169,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <?php include_once __DIR__ . '/../includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .section-header {
+                @apply flex items-center gap-3 py-4 border-b border-slate-100 mb-6;
+            }
+            .section-icon {
+                @apply w-10 h-10 bg-health-50 text-health-600 rounded-xl flex items-center justify-center text-lg;
+            }
+            .form-input-premium {
+                @apply w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-health-500 focus:ring-4 focus:ring-health-500/10 outline-none transition-all duration-200 bg-white;
+            }
+            .form-label-premium {
+                @apply block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1;
+            }
+            .card-premium {
+                @apply bg-white rounded-[2rem] border border-slate-100 shadow-sm shadow-slate-200/50 p-8;
+            }
+            .info-box {
+                @apply bg-slate-50 rounded-2xl p-6 border border-slate-100;
+            }
+            .badge-edit {
+                @apply bg-rose-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-200;
+            }
+            .baby-preview-card {
+                @apply p-6 bg-health-50 rounded-3xl border border-health-100 flex flex-col md:flex-row gap-8 items-center;
+            }
+        }
+    </style>
 </head>
-<body class="bg-health-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
+<body class="bg-slate-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
     <?php include_once '../includes/header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
@@ -178,27 +207,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
             <!-- Header Section -->
-            <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
                 <div>
-                    <h1 class="text-3xl font-black text-slate-900 tracking-tight">
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-4">
+                        <div class="w-12 h-12 bg-health-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-health-200">
+                            <i class="fas fa-baby-carriage"></i>
+                        </div>
                         <?php echo $editMode ? 'Edit Postnatal Record' : 'New Postnatal Visit'; ?>
                     </h1>
-                    <p class="text-slate-500 font-medium mt-1 italic">Comprehensive postpartum care monitoring</p>
+                    <p class="text-slate-500 font-medium mt-1">
+                        Comprehensive postpartum care and infant monitoring system
+                    </p>
                 </div>
-                
-                <?php if ($editMode): ?>
-                    <div class="badge-edit flex items-center gap-2 group">
-                        <div class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div>
-                        <span class="text-rose-700 font-bold uppercase tracking-widest text-[10px]">Active Edit Mode</span>
+                <div class="flex items-center gap-3">
+                    <?php if ($editMode): ?>
+                        <span class="badge-edit">
+                            <i class="fas fa-edit me-1"></i>Active Edit Mode
+                        </span>
+                    <?php endif; ?>
+                    <div class="px-4 py-2 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        Ref: WBMS-PN-<?= date('Y') ?>
                     </div>
-                <?php endif; ?>
-            </header>
+                </div>
+            </div>
 
             <!-- Alerts Section -->
             <?php if ($message): ?>
-                <div class="p-6 bg-emerald-50 border border-emerald-100 rounded-3xl flex items-start gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-200">
-                        <i class="fas fa-check text-white text-xl"></i>
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 flex items-start gap-4 text-emerald-800 animate-in fade-in slide-in-from-top duration-500 shadow-sm">
+                    <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-emerald-200">
+                        <i class="fas fa-check text-xl"></i>
                     </div>
                     <div class="space-y-1 pt-1">
                         <h3 class="text-emerald-900 font-black text-lg leading-tight uppercase tracking-tight">Operation Successful</h3>
@@ -208,9 +245,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <?php if ($error): ?>
-                <div class="p-6 bg-rose-50 border border-rose-100 rounded-3xl flex items-start gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-200">
-                        <i class="fas fa-exclamation-triangle text-white text-xl"></i>
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-6 flex items-start gap-4 text-rose-800 animate-in fade-in slide-in-from-top duration-500 shadow-sm">
+                    <div class="w-12 h-12 bg-rose-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-rose-200">
+                        <i class="fas fa-exclamation-triangle text-xl"></i>
                     </div>
                     <div class="space-y-1 pt-1">
                         <h3 class="text-rose-900 font-black text-lg leading-tight uppercase tracking-tight">System Error</h3>
@@ -292,20 +329,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div id="babyDetailsContainer" class="mt-8 transition-all duration-500 overflow-hidden">
+                    <div id="babyDetailsContainer" class="mt-8 transition-all duration-500">
                         <?php if (!empty($babies) || $editMode): ?>
-                            <div class="p-6 bg-health-50 rounded-3xl border border-health-100 flex flex-col md:flex-row gap-8 items-center">
+                            <div class="baby-preview-card">
                                 <div class="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center">
                                     <i class="fas fa-baby-carriage text-health-600 text-2xl"></i>
                                 </div>
                                 <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
                                     <div class="space-y-1">
-                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Infant Name</span>
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Infant Name</span>
                                         <div class="text-slate-800 font-bold"><?php echo $editMode ? htmlspecialchars($recordData['baby_first_name'] . ' ' . $recordData['baby_last_name']) : htmlspecialchars($babies[0]['first_name'] . ' ' . $babies[0]['last_name']); ?></div>
                                     </div>
                                     <div class="space-y-1">
-                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date of Birth</span>
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Date of Birth</span>
                                         <div class="text-slate-800 font-bold"><?php echo $editMode ? date('M j, Y', strtotime($recordData['baby_birth_date'])) : date('M j, Y', strtotime($babies[0]['birth_date'])); ?></div>
+                                    </div>
+                                </div>
+                                <div class="hidden md:block">
+                                    <div class="w-10 h-10 rounded-full bg-health-100 flex items-center justify-center text-health-600">
+                                        <i class="fas fa-check"></i>
                                     </div>
                                 </div>
                             </div>
@@ -331,7 +373,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="date" class="form-input-premium font-bold text-slate-700" id="visit_date" name="visit_date" required 
                                    value="<?php echo htmlspecialchars($recordData['visit_date'] ?? $_POST['visit_date'] ?? date('Y-m-d')); ?>">
                             <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="visit_date_warning">
-                                Required field
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required field
                             </div>
                         </div>
                         <div>
@@ -339,7 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="number" class="form-input-premium" id="visit_number" name="visit_number" placeholder="e.g. 1" required min="1"
                                    value="<?php echo htmlspecialchars($recordData['visit_number'] ?? $_POST['visit_number'] ?? ''); ?>">
                             <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="visit_number_warning">
-                                Required field
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required field
                             </div>
                         </div>
                     </div>
@@ -467,7 +509,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <label for="treatment" class="form-label-premium text-health-900">Maternal Management Plan</label>
-                            <textarea class="form-input-premium min-h-[100px] border-health-100 focus:border-health-600 focus:ring-health-200 py-3 text-sm" id="treatment" name="treatment" placeholder="Actions taken for mother..."><?php echo htmlspecialchars($recordData['treatment'] ?? $_POST['treatment'] ?? ''); ?></textarea>
+                            <textarea class="form-input-premium min-h-[100px] py-3 text-sm" id="treatment" name="treatment" placeholder="Actions taken for mother..."><?php echo htmlspecialchars($recordData['treatment'] ?? $_POST['treatment'] ?? ''); ?></textarea>
                         </div>
                     </div>
                 </section>
@@ -495,7 +537,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <label for="feeding_method" class="form-label-premium">Nutrition / Feeding</label>
-                            <select class="form-input-premium appearance-none" id="feeding_method" name="feeding_method">
+                            <select class="form-input-premium appearance-none text-sm" id="feeding_method" name="feeding_method">
                                 <option value="">Select Feeding Method</option>
                                 <option value="exclusive-breastfeeding" <?php echo (($recordData['feeding_method'] ?? $_POST['feeding_method'] ?? '') == 'exclusive-breastfeeding') ? 'selected' : ''; ?>>Exclusive breastfeeding</option>
                                 <option value="mixed-feeding" <?php echo (($recordData['feeding_method'] ?? $_POST['feeding_method'] ?? '') == 'mixed-feeding') ? 'selected' : ''; ?>>Mixed feeding</option>
@@ -511,7 +553,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <label for="baby_treatment" class="form-label-premium text-health-900">Infant Management Plan</label>
-                            <textarea class="form-input-premium min-h-[100px] border-health-100 focus:border-health-600 focus:ring-health-200 py-3 text-sm" id="baby_treatment" name="baby_treatment" placeholder="Actions taken for baby..."><?php echo htmlspecialchars($recordData['baby_treatment'] ?? $_POST['baby_treatment'] ?? ''); ?></textarea>
+                            <textarea class="form-input-premium min-h-[100px] py-3 text-sm" id="baby_treatment" name="baby_treatment" placeholder="Actions taken for baby..."><?php echo htmlspecialchars($recordData['baby_treatment'] ?? $_POST['baby_treatment'] ?? ''); ?></textarea>
                         </div>
                     </div>
                 </section>
@@ -535,15 +577,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <label for="next_visit_date" class="form-label-premium text-emerald-900">Next Scheduled Visit</label>
-                            <input type="date" class="form-input-premium border-emerald-100 focus:border-emerald-500 focus:ring-emerald-200 font-black text-emerald-700" id="next_visit_date" name="next_visit_date"
+                            <input type="date" class="form-input-premium border-emerald-100 focus:border-emerald-500 focus:ring-emerald-200 font-bold text-emerald-700" id="next_visit_date" name="next_visit_date"
                                    value="<?php echo htmlspecialchars($recordData['next_visit_date'] ?? $_POST['next_visit_date'] ?? ''); ?>">
                             <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="next_visit_date_warning">
-                                Must be after current visit date
+                                <i class="fas fa-exclamation-triangle me-1"></i> Must be after current visit date
                             </div>
                         </div>
                     </div>
 
-                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                    <div class="info-box">
                         <div class="flex flex-col md:flex-row gap-8">
                             <div class="flex-none">
                                 <label class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-200 cursor-pointer hover:border-emerald-500 transition-all group">
@@ -553,7 +595,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </label>
                             </div>
                             <div class="flex-1">
-                                <label for="referral_details" class="form-label-premium text-[10px]">Referral Particulars</label>
+                                <label for="referral_details" class="form-label-premium">Referral Particulars</label>
                                 <textarea class="form-input-premium border-slate-100 focus:border-emerald-500 focus:ring-emerald-100 min-h-[80px] py-3 text-sm" id="referral_details" name="referral_details" placeholder="Facility name, reason for referral..."><?php echo htmlspecialchars($recordData['referral_details'] ?? $_POST['referral_details'] ?? ''); ?></textarea>
                             </div>
                         </div>
@@ -622,12 +664,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 const field = document.getElementById(fieldId);
                 if (warning) warning.classList.remove('hidden');
                 if (field) {
-                    // Unique handling for vital sign parent cards
-                    if (['blood_pressure', 'weight', 'temperature'].includes(fieldId)) {
-                        field.closest('.p-6').classList.add('border-rose-500', 'ring-2', 'ring-rose-100');
-                    } else {
-                        field.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
-                    }
+                    field.classList.add('border-rose-500', 'ring-4', 'ring-rose-500/10');
+                    field.classList.remove('border-slate-200', 'focus:border-health-500', 'focus:ring-health-500/10');
                 }
             }
 
@@ -636,19 +674,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 const field = document.getElementById(fieldId);
                 if (warning) warning.classList.add('hidden');
                 if (field) {
-                    if (['blood_pressure', 'weight', 'temperature'].includes(fieldId)) {
-                        field.closest('.p-6').classList.remove('border-rose-500', 'ring-2', 'ring-rose-100');
-                    } else {
-                        field.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
-                    }
+                    field.classList.remove('border-rose-500', 'ring-4', 'ring-rose-500/10');
+                    field.classList.add('border-slate-200');
                 }
             }
 
             function validateNextVisitDate() {
+                if (!visitDate.value || !nextVisitDate.value) return true;
+                
                 const visit = new Date(visitDate.value);
                 const next = new Date(nextVisitDate.value);
                 
-                if (nextVisitDate.value && next <= visit) {
+                if (next <= visit) {
                     showWarning('next_visit_date');
                     return false;
                 } else {
@@ -708,7 +745,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             updateBabyDetailUI(data.babies[0]);
                         } else {
                             babyDetailsContainer.innerHTML = `
-                                <div class="p-6 bg-rose-50 rounded-3xl border border-rose-100 flex items-center gap-4">
+                                <div class="p-6 bg-rose-50 rounded-3xl border border-rose-100 flex items-center gap-4 animate-in fade-in duration-300">
                                     <div class="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center">
                                         <i class="fas fa-exclamation-triangle text-white"></i>
                                     </div>
@@ -732,24 +769,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     babyDetailsContainer.innerHTML = '';
                     return;
                 }
-                // We could fetch specific baby info here if needed, 
-                // but for now we'll just keep the first baby info or clear it
+                // Fetch specific baby details if needed, for now we re-preview from AJAX data or similar logic
             });
 
             function updateBabyDetailUI(baby) {
                 babyDetailsContainer.innerHTML = `
-                    <div class="p-6 bg-health-50 rounded-3xl border border-health-100 flex flex-col md:flex-row gap-8 items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="baby-preview-card animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div class="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center">
                             <i class="fas fa-baby-carriage text-health-600 text-2xl"></i>
                         </div>
                         <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
                             <div class="space-y-1">
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Infant Name</span>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Infant Name</span>
                                 <div class="text-slate-800 font-bold">${baby.first_name} ${baby.last_name}</div>
                             </div>
                             <div class="space-y-1">
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date of Birth</span>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Date of Birth</span>
                                 <div class="text-slate-800 font-bold">${new Date(baby.birth_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="w-10 h-10 rounded-full bg-health-100 flex items-center justify-center text-health-600">
+                                <i class="fas fa-check"></i>
                             </div>
                         </div>
                     </div>
@@ -782,20 +823,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         const errorField = document.getElementById(firstError.id.replace('_warning', ''));
-                        const target = errorField ? (['blood_pressure', 'weight', 'temperature'].includes(errorField.id) ? errorField.closest('.p-6') : errorField) : null;
-                        
-                        if (target) {
-                            target.classList.add('animate-pulse');
-                            setTimeout(() => target.classList.remove('animate-pulse'), 1000);
+                        if (errorField) {
+                            errorField.focus();
                         }
                     }
                 }
             });
-
-            // Initial focus visual feedback for edit mode
-            if (<?php echo $editMode ? 'true' : 'false'; ?>) {
-                // Initialize validation UI for existing data if needed
-            }
         });
     </script>
 </body>
