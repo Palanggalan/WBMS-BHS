@@ -102,114 +102,149 @@ $weightGain = $currentWeight - $baby['birth_weight'];
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="bg-slate-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
     <?php include_once 'includes/header.php'; ?>
     
-    <div class="container-fluid">
-        <div class="row">
-            <?php include_once 'includes/sidebar.php'; ?>
-            
-            <main class="main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <?php include_once 'includes/sidebar.php'; ?>
+        
+        <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
+            <!-- Header Section -->
+            <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 bg-health-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-health-200/50 text-2xl">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
                     <div>
-                        <h2 class="fw-bold mb-1">Growth Monitoring</h2>
-                        <p class="text-muted small mb-0">WHO Standardized Weight-for-Age Chart</p>
-                    </div>
-                    <div class="text-end">
-                        <button class="btn btn-outline-secondary btn-sm me-2" onclick="history.back()">
-                            <i class="fas fa-arrow-left me-1"></i> Back
-                        </button>
-                        <button class="btn btn-primary btn-sm" onclick="window.print()">
-                            <i class="fas fa-print me-1"></i> Export PDF
-                        </button>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Growth Monitoring</h1>
+                        <p class="text-slate-500 font-medium mt-1">WHO Standardized Weight-for-Age Analytics</p>
                     </div>
                 </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="history.back()" class="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-50 text-slate-600 rounded-2xl font-bold transition-all hover:bg-slate-100 border border-slate-200 active:scale-95 text-sm">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                    <button onclick="window.print()" class="inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 text-white rounded-2xl font-bold transition-all hover:bg-slate-800 shadow-lg active:scale-95 text-sm">
+                        <i class="fas fa-print"></i>
+                        Export PDF
+                    </button>
+                </div>
+            </header>
 
-                <!-- Bento Stat Grid -->
-                <div class="row g-4 mb-4">
-                    <div class="col-md-4">
-                        <div class="card stats-card border-0 shadow-sm" style="border-top: 4px solid var(--primary) !important;">
-                            <div class="stats-icon" style="background: var(--primary-light); color: var(--primary);">
-                                <i class="fas fa-id-card"></i>
-                            </div>
-                            <span class="fw-bold d-block"><?= htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?></span>
-                            <span class="stats-label"><?= ucfirst($baby['gender']); ?> • Born <?= date('M d, Y', strtotime($baby['birth_date'])); ?></span>
+            <!-- Bento Stat Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Profile Card -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:border-health-100 transition-colors">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-health-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                    <div class="relative flex items-center gap-4">
+                        <div class="w-12 h-12 bg-health-50 rounded-2xl flex items-center justify-center text-health-600">
+                            <i class="fas fa-id-card text-xl"></i>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card stats-card border-0 shadow-sm" style="border-top: 4px solid var(--accent) !important;">
-                            <div class="stats-icon" style="background: #e8f5e8; color: var(--accent);">
-                                <i class="fas fa-weight-scale"></i>
+                        <div>
+                            <div class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Patient Profile</div>
+                            <div class="text-lg font-black text-slate-900 leading-tight"><?= htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?></div>
+                            <div class="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-tighter">
+                                <?= ucfirst($baby['gender']); ?> • Born <?= date('M d, Y', strtotime($baby['birth_date'])); ?>
                             </div>
-                            <span class="stats-number"><?= $currentWeight; ?> kg</span>
-                            <span class="stats-label">Latest Recorded Weight</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card stats-card border-0 shadow-sm" style="border-top: 4px solid var(--secondary) !important;">
-                            <div class="stats-icon" style="background: #e3f2fd; color: var(--secondary);">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <span class="stats-number"><?= number_format($weightGain, 2); ?> kg</span>
-                            <span class="stats-label">Total Gain from Birth</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="row g-4">
-                    <div class="col-lg-9">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-header border-0 bg-transparent py-4">
-                                <h5 class="fw-bold mb-0">Weight-for-Age (0-12 Months)</h5>
-                                <p class="text-muted small mb-0">Shaded areas represent WHO percentile distributions</p>
-                            </div>
-                            <div class="card-body">
-                                <div style="height: 450px;">
-                                    <canvas id="growthChart"></canvas>
-                                </div>
-                            </div>
+                <!-- Latest Weight -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:border-emerald-100 transition-colors">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                    <div class="relative flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-weight-scale text-xl"></i>
                         </div>
-                    </div>
-                    
-                    <div class="col-lg-3">
-                        <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-body">
-                                <h6 class="fw-bold mb-3">Legend Guide</h6>
-                                <div class="small">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div style="width: 12px; height: 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444;" class="me-2"></div>
-                                        <span>Borderline (P3/P97)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div style="width: 12px; height: 12px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981;" class="me-2"></div>
-                                        <span>Optimal (P15-P85)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <div style="width: 12px; height: 12px; background: #2563eb; border-radius: 50%;" class="me-2"></div>
-                                        <span>Patient Record</span>
-                                    </div>
-                                    
-                                    <div class="alert alert-light border small">
-                                        <i class="fas fa-info-circle text-primary me-2"></i>
-                                        Healthy growth usually follows parallel to the curves. Sudden drops or spikes should be reviewed by a midwife.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card border-0 shadow-sm bg-primary-light border-start border-4 border-primary">
-                            <div class="card-body">
-                                <h6 class="fw-bold text-primary mb-2">Next Actions</h6>
-                                <ul class="list-unstyled small mb-0">
-                                    <li class="mb-2"><i class="fas fa-check-circle me-2"></i> Schedule 6-month check</li>
-                                    <li><i class="fas fa-check-circle me-2"></i> Update immunization</li>
-                                </ul>
-                            </div>
+                        <div>
+                            <div class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Current Weight</div>
+                            <div class="text-3xl font-black text-slate-900 tracking-tighter leading-none"><?= $currentWeight; ?> <span class="text-sm font-bold text-slate-400 ml-1">kg</span></div>
+                            <div class="text-[10px] font-bold text-emerald-500 mt-2 uppercase tracking-tight">Latest Recorded Data</div>
                         </div>
                     </div>
                 </div>
-            </main>
-        </div>
+
+                <!-- Growth Gain -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:border-sky-100 transition-colors">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-sky-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                    <div class="relative flex items-center gap-4">
+                        <div class="w-12 h-12 bg-sky-50 rounded-2xl flex items-center justify-center text-sky-600">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Weight Gain</div>
+                            <div class="text-3xl font-black text-slate-900 tracking-tighter leading-none">+<?= number_format($weightGain, 2); ?> <span class="text-sm font-bold text-slate-400 ml-1">kg</span></div>
+                            <div class="text-[10px] font-bold text-sky-500 mt-2 uppercase tracking-tight">Since Birth (<?= $baby['birth_weight']; ?> kg)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Chart Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <div class="lg:col-span-3">
+                    <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 class="text-xl font-black text-slate-900">Weight-for-Age Analytics</h2>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Growth Percentile Shading (0-12 Months)</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-health-600 animate-pulse"></span>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Real-time Data</span>
+                            </div>
+                        </div>
+                        <div class="h-[500px] w-full relative">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Legend Card -->
+                    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-6 px-2">Legend Guide</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3 p-3 bg-rose-50/50 border border-rose-100 rounded-2xl transition-all hover:bg-rose-50">
+                                <div class="w-2 h-8 bg-rose-500 rounded-full"></div>
+                                <div>
+                                    <div class="text-[10px] font-black text-rose-600 uppercase">Borderline</div>
+                                    <div class="text-[9px] font-bold text-slate-400">P3 / P97 Standard</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-emerald-50/50 border border-emerald-100 rounded-2xl transition-all hover:bg-emerald-50">
+                                <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
+                                <div>
+                                    <div class="text-[10px] font-black text-emerald-600 uppercase">Optimal</div>
+                                    <div class="text-[9px] font-bold text-slate-400">P15-P85 Distribution</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-800 rounded-2xl">
+                                <div class="w-3 h-3 bg-white rounded-full ml-1"></div>
+                                <div>
+                                    <div class="text-[10px] font-black text-white uppercase tracking-tight">Patient Record</div>
+                                    <div class="text-[9px] font-bold text-slate-400">Individual History</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clinical Tip -->
+                    <div class="bg-health-600 p-8 rounded-[2rem] text-white shadow-xl shadow-health-200 relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full transition-transform group-hover:scale-150"></div>
+                        <div class="relative">
+                            <i class="fas fa-info-circle text-2xl mb-4"></i>
+                            <h3 class="text-sm font-black uppercase tracking-widest mb-2">Growth Tip</h3>
+                            <p class="text-[11px] leading-relaxed font-medium text-health-50 opacity-90">
+                                Healthy growth usually follows parallel to the curves. Sudden drops or spikes should be immediately reviewed by a midwife or pediatrician.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
@@ -281,18 +316,32 @@ $weightGain = $currentWeight - $baby['birth_weight'];
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleFont: { family: 'Inter', weight: 'bold', size: 12 },
+                        bodyFont: { family: 'Inter', size: 11 },
+                        padding: 12,
+                        cornerRadius: 12,
+                        displayColors: true
+                    }
                 },
                 scales: {
                     y: {
-                        beginAtZero: true,
-                        grid: { color: '#f1f5f9' },
-                        title: { display: true, text: 'Weight (kg)', font: { weight: '600' } }
+                        beginAtZero: false,
+                        grid: { color: 'rgba(241, 245, 249, 0.5)', drawBorder: false },
+                        ticks: { color: '#94a3b8', font: { family: 'Inter', weight: '600', size: 10 } },
+                        title: { display: true, text: 'Weight (kg)', color: '#64748b', font: { family: 'Inter', weight: '700', size: 11 } }
                     },
                     x: {
                         grid: { display: false },
-                        title: { display: true, text: 'Age (Months)', font: { weight: '600' } }
+                        ticks: { color: '#94a3b8', font: { family: 'Inter', weight: '600', size: 10 } },
+                        title: { display: true, text: 'Age (Months)', color: '#64748b', font: { family: 'Inter', weight: '700', size: 11 } }
                     }
                 }
             }
