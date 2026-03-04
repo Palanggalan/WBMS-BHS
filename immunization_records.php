@@ -302,9 +302,9 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- History Modal -->
     <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin-top: 2rem;">
             <div class="modal-content border-0 rounded-[2rem] shadow-2xl overflow-hidden">
-                <div class="modal-header bg-slate-50/80 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+                <div class="modal-header bg-white border-b border-slate-100 px-8 py-5 flex items-center justify-between w-full">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 bg-health-600 rounded-xl flex items-center justify-center text-white shadow-sm">
                             <i class="fas fa-history text-sm"></i>

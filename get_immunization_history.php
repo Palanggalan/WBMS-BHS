@@ -45,7 +45,7 @@ $ageString = $age->y . "y " . $age->m . "m " . $age->d . "d";
 ?>
 
 <!-- Patient Header Summary -->
-<div class="flex items-center gap-4 p-4 mb-6 bg-slate-50/50 rounded-2xl border border-slate-100">
+<div class="flex items-center gap-4 p-5 bg-slate-50 border-b border-slate-100">
     <div class="w-12 h-12 bg-health-100 rounded-xl flex items-center justify-center text-health-600 border border-health-200/30">
         <i class="fas fa-baby text-lg"></i>
     </div>
@@ -65,18 +65,19 @@ $ageString = $age->y . "y " . $age->m . "m " . $age->d . "d";
 </div>
 
 <!-- Timeline Table -->
-<div class="relative overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50/60 border-b border-slate-100">
-                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Vaccine & Dose</th>
-                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Date</th>
-                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Next Due</th>
-                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Provider</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
+<div class="p-6">
+    <div class="relative overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-100">
+                        <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Vaccine & Dose</th>
+                        <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Date</th>
+                        <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Next Due</th>
+                        <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Provider</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
                 <?php if (empty($records)): ?>
                     <tr>
                         <td colspan="4" class="px-5 py-10 text-center">
