@@ -45,90 +45,83 @@ $ageString = $age->y . "y " . $age->m . "m " . $age->d . "d";
 ?>
 
 <!-- Patient Header Summary -->
-<div class="flex items-center gap-6 p-6 mb-8 bg-slate-50/50 rounded-3xl border border-slate-100">
-    <div class="w-16 h-16 bg-health-100 rounded-2xl flex items-center justify-center text-health-600 shadow-sm border border-health-200/50">
-        <i class="fas fa-baby text-2xl"></i>
+<div class="flex items-center gap-4 p-4 mb-6 bg-slate-50/50 rounded-2xl border border-slate-100">
+    <div class="w-12 h-12 bg-health-100 rounded-xl flex items-center justify-center text-health-600 border border-health-200/30">
+        <i class="fas fa-baby text-lg"></i>
     </div>
-    <div>
-        <h4 class="text-2xl font-black text-slate-900 tracking-tight mb-1">
-            <?php echo htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?>
-        </h4>
-        <div class="flex items-center gap-3">
-            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-white px-2 py-0.5 rounded border border-slate-100">
-                DOB: <?php echo date('M d, Y', strtotime($baby['birth_date'])); ?>
-            </span>
-            <span class="w-1 h-1 rounded-full bg-slate-200"></span>
-            <span class="text-[10px] font-black text-health-600 uppercase tracking-widest bg-health-50 px-2 py-0.5 rounded border border-health-100">
+    <div class="flex-1">
+        <div class="flex items-center justify-between w-full">
+            <h4 class="text-xl font-black text-slate-900 tracking-tight">
+                <?php echo htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?>
+            </h4>
+            <span class="text-[9px] font-black text-health-600 uppercase tracking-widest bg-health-50 px-2 py-1 rounded border border-health-100">
                 Age: <?php echo $ageString; ?>
             </span>
+        </div>
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+            DOB: <?php echo date('M d, Y', strtotime($baby['birth_date'])); ?>
         </div>
     </div>
 </div>
 
 <!-- Timeline Table -->
-<div class="relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white">
+<div class="relative overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="bg-slate-50/80 border-b border-slate-100">
-                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Vaccine & Dose</th>
-                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date Administered</th>
-                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Next Due</th>
-                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Provider</th>
+                <tr class="bg-slate-50/60 border-b border-slate-100">
+                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Vaccine & Dose</th>
+                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Date</th>
+                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Next Due</th>
+                    <th class="px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Provider</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 <?php if (empty($records)): ?>
                     <tr>
-                        <td colspan="4" class="px-6 py-12 text-center">
+                        <td colspan="4" class="px-5 py-10 text-center">
                             <div class="flex flex-col items-center gap-2">
-                                <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-200">
-                                    <i class="fas fa-syringe"></i>
-                                </div>
-                                <p class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">No records yet</p>
+                                <i class="fas fa-syringe text-slate-200"></i>
+                                <p class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">No history recorded</p>
                             </div>
                         </td>
                     </tr>
                 <?php else: ?>
                     <?php foreach ($records as $record): ?>
-                    <tr class="hover:bg-slate-50/50 transition-all group">
-                        <td class="px-6 py-5">
+                    <tr class="hover:bg-slate-50/50 transition-all">
+                        <td class="px-5 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-health-50 text-health-600 flex items-center justify-center text-xs font-bold border border-health-100">
+                                <div class="w-7 h-7 rounded-lg bg-health-50 text-health-600 flex items-center justify-center text-[10px] font-black border border-health-100">
                                     D<?php echo $record['dose_number']; ?>
                                 </div>
                                 <div>
-                                    <div class="text-xs font-black text-slate-900 group-hover:text-health-700 transition-colors">
+                                    <div class="text-xs font-black text-slate-900 leading-tight">
                                         <?php echo htmlspecialchars($record['vaccine_name']); ?>
                                     </div>
-                                    <div class="text-[9px] font-bold text-slate-400 uppercase mt-0.5 leading-none italic">
-                                        <?php echo htmlspecialchars($record['remarks'] ?? 'Normal Administration'); ?>
+                                    <div class="text-[8px] font-bold text-slate-400 uppercase italic">
+                                        <?php echo htmlspecialchars($record['remarks'] ?: 'Standard Admin'); ?>
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-5">
-                            <div class="text-xs font-bold text-slate-700">
+                        <td class="px-5 py-4 text-center">
+                            <div class="text-[11px] font-bold text-slate-700">
                                 <?php echo date('M j, Y', strtotime($record['date_given'])); ?>
                             </div>
                         </td>
-                        <td class="px-6 py-5">
+                        <td class="px-5 py-4 text-center">
                             <?php if ($record['next_dose_date']): ?>
-                                <div class="inline-flex items-center gap-1.5 px-2 py-1 bg-amber-50 rounded-lg border border-amber-100">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                                    <span class="text-[10px] font-bold text-amber-700 uppercase tracking-tighter">
-                                        <?php echo date('M j, Y', strtotime($record['next_dose_date'])); ?>
-                                    </span>
-                                </div>
+                                <span class="px-2 py-0.5 bg-amber-50 text-amber-700 text-[9px] font-black rounded border border-amber-100 uppercase tracking-tighter">
+                                    <?php echo date('M j, Y', strtotime($record['next_dose_date'])); ?>
+                                </span>
                             <?php else: ?>
-                                <span class="text-[10px] font-bold text-slate-300 uppercase italic">Series Complete</span>
+                                <span class="text-[9px] font-bold text-slate-300 uppercase italic">Complete</span>
                             <?php endif; ?>
                         </td>
-                        <td class="px-6 py-5 text-right">
-                            <div class="text-[10px] font-black text-slate-600 uppercase tracking-tight">
+                        <td class="px-5 py-4 text-right">
+                            <div class="text-[9px] font-black text-slate-600 uppercase">
                                 <?php echo htmlspecialchars($record['worker_first'] . ' ' . $record['worker_last']); ?>
                             </div>
-                            <div class="text-[8px] font-bold text-slate-400 uppercase mt-0.5">Administered By</div>
                         </td>
                     </tr>
                     <?php endforeach; ?>

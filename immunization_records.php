@@ -304,21 +304,21 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content border-0 rounded-[2rem] shadow-2xl overflow-hidden">
-                <div class="modal-header bg-slate-50 border-b border-slate-100 px-8 py-5 flex items-center justify-between w-full">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-health-100 rounded-2xl flex items-center justify-center text-health-600 shadow-sm border border-health-200/50">
-                            <i class="fas fa-history text-xl"></i>
+                <div class="modal-header bg-slate-50/80 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-health-600 rounded-xl flex items-center justify-center text-white shadow-sm">
+                            <i class="fas fa-history text-sm"></i>
                         </div>
                         <div>
-                            <h5 class="text-xl font-black text-slate-900 leading-tight">Vaccination History</h5>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 text-left">Detailed administration timeline</p>
+                            <h5 class="text-lg font-black text-slate-900 leading-none">Vaccination History</h5>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Timeline for patient administration</p>
                         </div>
                     </div>
-                    <button type="button" class="w-10 h-10 rounded-xl hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-all hover:rotate-90" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i>
+                    <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-200/50 flex items-center justify-center text-slate-400 transition-all" data-bs-dismiss="modal">
+                        <i class="fas fa-times text-sm"></i>
                     </button>
                 </div>
-                <div class="modal-body p-6">
+                <div class="modal-body p-0">
                     <div id="historyContent">
                         <div class="flex flex-col items-center gap-4 py-12">
                             <div class="w-12 h-12 border-4 border-health-100 border-t-health-600 rounded-full animate-spin"></div>
