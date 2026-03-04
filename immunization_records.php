@@ -303,8 +303,8 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- History Modal -->
     <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content border-0 rounded-[2rem] shadow-2xl overflow-hidden mt-8">
-                <div class="modal-header bg-slate-50 border-b border-slate-100 px-8 py-6 flex items-center justify-between w-full">
+            <div class="modal-content border-0 rounded-[2rem] shadow-2xl overflow-hidden">
+                <div class="modal-header bg-slate-50 border-b border-slate-100 px-8 py-5 flex items-center justify-between w-full">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-health-100 rounded-2xl flex items-center justify-center text-health-600 shadow-sm border border-health-200/50">
                             <i class="fas fa-history text-xl"></i>
@@ -318,8 +318,8 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="modal-body p-8">
-                    <div id="historyContent" class="min-h-[200px]">
+                <div class="modal-body p-6">
+                    <div id="historyContent">
                         <div class="flex flex-col items-center gap-4 py-12">
                             <div class="w-12 h-12 border-4 border-health-100 border-t-health-600 rounded-full animate-spin"></div>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Retrieving history...</p>
