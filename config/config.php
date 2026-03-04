@@ -19,21 +19,25 @@ error_reporting(E_ALL);
 // Include database configuration
 require_once CONFIG_PATH . 'database.php';
 
-// Function to get absolute URL
+// Function to get absolute project root URL
 function getBaseUrl() {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
     $host = $_SERVER['HTTP_HOST'];
-    $script = $_SERVER['SCRIPT_NAME'];
     
-    // Remove the script name from the path
-    $path = dirname($script);
+    // Get the absolute path to the project root and document root
+    $projectRoot = str_replace('\\', '/', ROOT_PATH);
+    $docRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
     
-    // Handle different environments
-    if ($path === '/' || $path === '\\') {
-        $path = '';
+    // Calculate the relative path from the document root to the project root
+    $baseUrlPath = str_replace($docRoot, '', $projectRoot);
+    
+    // Ensure it starts with a / and doesn't end with one
+    if (strpos($baseUrlPath, '/') !== 0) {
+        $baseUrlPath = '/' . $baseUrlPath;
     }
+    $baseUrlPath = rtrim($baseUrlPath, '/');
     
-    return $protocol . "://" . $host . $path;
+    return $protocol . "://" . $host . $baseUrlPath;
 }
 
 // Set global base URL
