@@ -339,7 +339,12 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 const babyId = button.getAttribute('data-baby-id');
                 const contentDiv = document.getElementById('historyContent');
                 
-                contentDiv.innerHTML = '<div class="text-center"><div class="spinner-border text-primary"></div><p class="mt-2">Loading...</p></div>';
+                contentDiv.innerHTML = `
+                    <div class="flex flex-col items-center gap-4 py-12">
+                        <div class="w-12 h-12 border-4 border-health-100 border-t-health-600 rounded-full animate-spin"></div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Retrieving history...</p>
+                    </div>
+                `;
 
                 fetch('get_immunization_history.php?baby_id=' + babyId)
                     .then(response => response.text())
