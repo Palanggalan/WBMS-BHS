@@ -79,139 +79,30 @@ function displayDate($date, $format = 'M d, Y') {
 
 <div class="modal-body p-8 bg-slate-50/30" style="max-height: 70vh; overflow-y: auto;">
     <?php if (!empty($records)): ?>
-        <div class="space-y-4" id="prenatalAccordion">
+        <div class="space-y-3">
             <?php foreach ($records as $index => $record): ?>
-            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group">
-                <button class="w-full px-6 py-5 flex items-center justify-between hover:bg-slate-50 transition-colors text-left" 
-                        type="button" data-bs-toggle="collapse" 
-                        data-bs-target="#prenatal<?php echo $record['id']; ?>">
-                    <div class="flex items-center gap-5">
-                        <div class="flex flex-col items-center justify-center w-14 h-14 bg-slate-50 rounded-2xl border border-slate-100 group-hover:bg-health-50 group-hover:border-health-100 transition-colors">
-                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1">Visit</span>
-                            <span class="text-lg font-black text-slate-700 leading-none">#<?php echo $record['visit_number']; ?></span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-slate-800"><?php echo displayDate($record['visit_date']); ?></p>
-                            <p class="text-[10px] font-bold text-health-600 uppercase tracking-widest mt-1">Gestational Age: <?php echo displayData($record['gestational_age']); ?></p>
-                        </div>
+            <button
+                onclick="window.viewVisitDetails('prenatal', <?php echo $record['id']; ?>)"
+                class="w-full bg-white hover:bg-health-50 border border-slate-100 hover:border-health-200 rounded-3xl px-6 py-5 flex items-center justify-between group transition-all duration-200 hover:shadow-lg hover:shadow-health-100/40 text-left active:scale-[0.99]">
+                <div class="flex items-center gap-5">
+                    <div class="flex flex-col items-center justify-center w-14 h-14 bg-slate-50 group-hover:bg-health-100 rounded-2xl border border-slate-100 group-hover:border-health-200 transition-colors shrink-0">
+                        <span class="text-[10px] font-black text-slate-400 group-hover:text-health-600 uppercase tracking-tighter leading-none mb-1">Visit</span>
+                        <span class="text-lg font-black text-slate-700 group-hover:text-health-700 leading-none">#<?php echo $record['visit_number']; ?></span>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <?php if ($index === 0): ?>
-                            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100">Latest</span>
-                        <?php endif; ?>
-                        <i class="fas fa-chevron-down text-slate-300 text-xs transition-transform duration-300 group-aria-expanded:rotate-180"></i>
-                    </div>
-                </button>
-                
-                <div id="prenatal<?php echo $record['id']; ?>" class="collapse" data-bs-parent="#prenatalAccordion">
-                    <div class="px-6 pb-6 pt-2 border-t border-slate-50">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <!-- Clinical Vitals -->
-                            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-4">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <i class="fas fa-heartbeat text-health-600 text-xs"></i>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vital Signs</span>
-                                </div>
-                                <div class="grid grid-cols-1 gap-3">
-                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Blood Pressure</span>
-                                        <span class="text-sm font-black text-slate-800"><?php echo displayData($record['blood_pressure']); ?></span>
-                                    </div>
-                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Weight</span>
-                                        <span class="text-sm font-black text-slate-800"><?php echo displayData($record['weight']); ?> kg</span>
-                                    </div>
-                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Temperature</span>
-                                        <span class="text-sm font-black text-slate-800"><?php echo displayData($record['temperature']); ?> °C</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Laboratory Results -->
-                            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-4">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <i class="fas fa-microscope text-sky-500 text-xs"></i>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Lab Report</span>
-                                </div>
-                                <div class="grid grid-cols-1 gap-3">
-                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Hemoglobin</span>
-                                        <span class="text-sm font-black text-slate-800"><?php echo displayData($record['hb_level']); ?> g/dL</span>
-                                    </div>
-                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Blood Sugar</span>
-                                        <span class="text-sm font-black text-slate-800"><?php echo displayData($record['blood_sugar']); ?> mg/dL</span>
-                                    </div>
-                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100">
-                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Blood Group</span>
-                                        <span class="text-sm font-black text-health-600"><?php echo displayData($record['blood_group']); ?> (<?php echo displayData($record['rhesus_factor']); ?>)</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Screening & Meds -->
-                            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-4">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <i class="fas fa-shield-virus text-amber-500 text-xs"></i>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Screening & Meds</span>
-                                </div>
-                                <div class="space-y-3">
-                                    <div class="flex flex-wrap gap-2">
-                                        <?php if ($record['iron_supplement']): ?><span class="px-2 py-1 bg-amber-50 text-amber-600 text-[9px] font-black rounded-lg border border-amber-100">IRON</span><?php endif; ?>
-                                        <?php if ($record['folic_acid']): ?><span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg border border-emerald-100">FOLIC</span><?php endif; ?>
-                                        <?php if ($record['calcium']): ?><span class="px-2 py-1 bg-sky-50 text-sky-600 text-[9px] font-black rounded-lg border border-sky-100">CA++</span><?php endif; ?>
-                                    </div>
-                                    <div class="bg-white p-3 rounded-xl border border-slate-100 mt-2">
-                                        <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Infectious Disease Screening</span>
-                                        <div class="flex justify-between text-[11px] font-black">
-                                            <span class="text-slate-500">HIV: <?php echo displayData($record['hiv_status']); ?></span>
-                                            <span class="text-slate-500">HepB: <?php echo displayData($record['hepatitis_b']); ?></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Clinical Findings -->
-                        <div class="mt-6 bg-slate-50 rounded-2xl p-5 border border-slate-100">
-                             <div class="flex items-center gap-2 mb-3">
-                                <i class="fas fa-clipboard-check text-indigo-500 text-xs"></i>
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Provider Assessment & Notes</span>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Clinical Findings</span>
-                                    <p class="text-xs text-slate-700 font-medium mt-1 leading-relaxed"><?php echo displayData($record['findings'], 'No significant findings documented.'); ?></p>
-                                </div>
-                                <div>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Diagnosis & Treatment</span>
-                                    <p class="text-xs text-slate-900 font-black mt-1 leading-relaxed"><?php echo displayData($record['diagnosis']); ?></p>
-                                    <p class="text-[11px] text-health-600 font-bold mt-1 italic"><?php echo displayData($record['treatment'], 'N/A'); ?></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <?php if (!empty($record['next_visit_date'])): ?>
-                        <div class="mt-4 flex items-center justify-center py-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest flex items-center gap-2">
-                                <i class="fas fa-calendar-check text-xs"></i>
-                                Next Appointment: <?php echo displayDate($record['next_visit_date']); ?>
-                            </span>
-                        </div>
-                        <?php endif; ?>
-
-                        <div class="mt-4 flex justify-end">
-                            <button
-                                onclick="window.viewVisitDetails('prenatal', <?php echo $record['id']; ?>)"
-                                class="flex items-center gap-2 px-5 py-2.5 bg-health-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-health-700 active:scale-95 transition-all shadow-lg shadow-health-200">
-                                <i class="fas fa-file-medical"></i>
-                                View Full Report
-                            </button>
-                        </div>
+                    <div class="text-left">
+                        <p class="text-sm font-bold text-slate-800"><?php echo displayDate($record['visit_date']); ?></p>
+                        <p class="text-[10px] font-bold text-health-600 uppercase tracking-widest mt-1">AOG: <?php echo displayData($record['gestational_age']); ?> &nbsp;·&nbsp; BP: <?php echo displayData($record['blood_pressure']); ?></p>
                     </div>
                 </div>
-            </div>
+                <div class="flex items-center gap-3 shrink-0">
+                    <?php if ($index === 0): ?>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100">Latest</span>
+                    <?php endif; ?>
+                    <div class="w-9 h-9 rounded-xl bg-health-50 group-hover:bg-health-600 flex items-center justify-center transition-all">
+                        <i class="fas fa-arrow-right text-health-600 group-hover:text-white text-xs transition-colors"></i>
+                    </div>
+                </div>
+            </button>
             <?php endforeach; ?>
         </div>
     <?php else: ?>
