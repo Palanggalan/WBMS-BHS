@@ -375,7 +375,7 @@ $postnatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Postnatal Details Modal -->
     <div class="modal fade postnatal-details-modal" id="postnatalDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header flex items-center justify-between">
                     <div>
