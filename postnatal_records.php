@@ -149,6 +149,9 @@ $postnatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-color: #0ea5e9;
             box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
         }
+        .postnatal-details-modal .modal-dialog {
+            max-width: 56rem;
+        }
         .postnatal-details-modal .modal-content {
             border: none;
             border-radius: 2.5rem;
@@ -375,7 +378,7 @@ $postnatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Postnatal Details Modal -->
     <div class="modal fade postnatal-details-modal" id="postnatalDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header flex items-center justify-between">
                     <div>
