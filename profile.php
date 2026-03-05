@@ -1,3 +1,97 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.gc_probability', 0);
+    session_start();
+}
+
+$rootPath = __DIR__;
+require_once $rootPath . '/includes/auth.php';
+require_once $rootPath . '/includes/functions.php';
+
+if (!isLoggedIn()) {
+    header('Location: login.php');
+    exit();
+}
+
+// Security questions list (must match register.php)
+$security_questions = [
+    'pet_name'       => "What was the name of your first pet?",
+    'birth_city'     => "In what city were you born?",
+    'mother_maiden'  => "What is your mother's maiden name?",
+    'school_name'    => "What elementary school did you attend?",
+    'childhood_nick' => "What was your childhood nickname?",
+    'favorite_team'  => "What is the name of your favorite sports team?",
+    'street_grew_up' => "What street did you grow up on?",
+    'first_car'      => "What was the make of your first car?",
+];
+
+$userId  = $_SESSION['user_id'];
+$message = '';
+$error   = '';
+
+// Fetch current user data
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$userId]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    header('Location: logout.php');
+    exit();
+}
+
+$hasSecurityQuestion = !empty($user['security_question']) && !empty($user['security_answer']);
+
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // ── Update personal info ──────────────────────────────────────────────────
+    if (isset($_POST['first_name'])) {
+        $firstName = trim($_POST['first_name'] ?? '');
+        $lastName  = trim($_POST['last_name']  ?? '');
+        $email     = trim($_POST['email']      ?? '');
+        $phone     = trim($_POST['phone']      ?? '');
+
+        if (empty($firstName) || empty($lastName) || empty($email)) {
+            $error = 'First name, last name, and email are required.';
+        } else {
+            $upd = $pdo->prepare("UPDATE users SET first_name=?, last_name=?, email=?, phone=? WHERE id=?");
+            if ($upd->execute([$firstName, $lastName, $email, $phone, $userId])) {
+                $_SESSION['first_name'] = $firstName;
+                $_SESSION['last_name']  = $lastName;
+                $message = 'Profile updated successfully.';
+                // Refresh user data
+                $stmt->execute([$userId]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $error = 'Failed to update profile. Please try again.';
+            }
+        }
+    }
+
+    // ── Set/Update security question ─────────────────────────────────────────
+    if (isset($_POST['security_question']) && isset($_POST['security_answer'])) {
+        $question = trim($_POST['security_question'] ?? '');
+        $answer   = trim($_POST['security_answer']   ?? '');
+
+        if (empty($question) || !isset($security_questions[$question])) {
+            $error = 'Please select a valid security question.';
+        } elseif (empty($answer)) {
+            $error = 'Security answer cannot be empty.';
+        } else {
+            $hashedAnswer = password_hash(strtolower($answer), PASSWORD_DEFAULT);
+            $upd = $pdo->prepare("UPDATE users SET security_question=?, security_answer=? WHERE id=?");
+            if ($upd->execute([$question, $hashedAnswer, $userId])) {
+                $message = 'Security recovery question saved successfully.';
+                $stmt->execute([$userId]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                $hasSecurityQuestion = true;
+            } else {
+                $error = 'Failed to save security question. Please try again.';
+            }
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
