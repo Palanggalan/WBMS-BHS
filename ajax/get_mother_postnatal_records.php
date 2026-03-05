@@ -209,6 +209,15 @@ function calculateBabyAge($birthDate) {
                             </span>
                         </div>
                         <?php endif; ?>
+
+                        <div class="mt-4 flex justify-end">
+                            <button
+                                onclick="window.viewVisitDetails('postnatal', <?php echo $record['id']; ?>)"
+                                class="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-200">
+                                <i class="fas fa-file-prescription"></i>
+                                View Full Report
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

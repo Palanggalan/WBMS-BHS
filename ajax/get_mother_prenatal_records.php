@@ -200,6 +200,15 @@ function displayDate($date, $format = 'M d, Y') {
                             </span>
                         </div>
                         <?php endif; ?>
+
+                        <div class="mt-4 flex justify-end">
+                            <button
+                                onclick="window.viewVisitDetails('prenatal', <?php echo $record['id']; ?>)"
+                                class="flex items-center gap-2 px-5 py-2.5 bg-health-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-health-700 active:scale-95 transition-all shadow-lg shadow-health-200">
+                                <i class="fas fa-file-medical"></i>
+                                View Full Report
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -170,7 +170,7 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
                     </div>
                 </div>
                 
-                <div class="card-health p-6 flex items-center gap-5 border-t-4 border-sky-600">
+                <div class="card-health p-6 flex items-center gap-5 border-t-4 border-sky-600 cursor-pointer hover:bg-slate-50 transition-all hover:-translate-y-1 active:scale-95 duration-300" onclick="document.getElementById('prenatalModalTrigger').click()">
                     <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center text-xl">
                         <i class="fas fa-clipboard-heart"></i>
                     </div>
@@ -180,7 +180,7 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
                     </div>
                 </div>
 
-                <div class="card-health p-6 flex items-center gap-5 border-t-4 border-amber-600">
+                <div class="card-health p-6 flex items-center gap-5 border-t-4 border-amber-600 cursor-pointer hover:bg-slate-50 transition-all hover:-translate-y-1 active:scale-95 duration-300" onclick="document.getElementById('postnatalModalTrigger').click()">
                     <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-xl">
                         <i class="fas fa-house-medical-check"></i>
                     </div>
@@ -418,6 +418,22 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
         </div>
     </div>
 
+    <!-- Specific Visit Detail Modal -->
+    <div class="modal fade" id="visitDetailModal" tabindex="-1" style="z-index: 1060;">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content overflow-hidden border-0 rounded-[2.5rem] shadow-2xl bg-slate-50">
+                <div class="modal-header border-0 px-8 pt-8 pb-0 bg-transparent flex justify-end">
+                    <button type="button" class="w-12 h-12 rounded-2xl bg-white shadow-soft flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all active:scale-90" data-bs-dismiss="modal">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="modal-body p-8 pt-4" id="visitDetailContent">
+                    <!-- Loaded via AJAX -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -431,6 +447,26 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
             };
             loadModal('prenatalModal', '<?= $baseUrl ?>/ajax/get_mother_prenatal_records.php');
             loadModal('postnatalModal', '<?= $baseUrl ?>/ajax/get_mother_postnatal_records.php');
+
+            // Global function to open specific visit details
+            window.viewVisitDetails = function(type, id) {
+                const modal = new bootstrap.Modal(document.getElementById('visitDetailModal'));
+                const content = document.getElementById('visitDetailContent');
+                const url = type === 'prenatal' ? '<?= $baseUrl ?>/get_prenatal_details.php?id=' + id : '<?= $baseUrl ?>/get_postnatal_details.php?id=' + id;
+                
+                content.innerHTML = '<div class="py-20 flex flex-col items-center justify-center gap-4"><div class="w-12 h-12 border-4 border-health-600/20 border-t-health-600 rounded-full animate-spin"></div><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Fetching Clinical Details...</p></div>';
+                
+                modal.show();
+                
+                fetch(url)
+                    .then(r => r.text())
+                    .then(html => {
+                        content.innerHTML = html;
+                    })
+                    .catch(err => {
+                        content.innerHTML = '<div class="p-12 text-center bg-rose-50 rounded-[2rem] border border-rose-100"><i class="fas fa-exclamation-triangle text-rose-500 text-3xl mb-4"></i><p class="text-rose-600 font-bold">Failed to load record details.</p></div>';
+                    });
+            };
 
             // SOS Handler
             document.getElementById('sosTrigger').addEventListener('click', function() {

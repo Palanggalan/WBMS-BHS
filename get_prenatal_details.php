@@ -15,7 +15,7 @@ require_once $rootPath . '/includes/auth.php';
 require_once $rootPath . '/includes/functions.php';
 
 // Authorization check
-if (!isAuthorized(['admin', 'midwife'])) {
+if (!isAuthorized(['admin', 'midwife', 'mother'])) {
     http_response_code(403);
     echo '<div class="p-12 text-center bg-rose-50 rounded-[2.5rem] border border-rose-100">
             <div class="w-20 h-20 bg-rose-100 text-rose-500 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6 shadow-lg shadow-rose-100">
@@ -60,6 +60,25 @@ try {
 
     if (!$record) {
         throw new Exception("Record with ID #PR-{$recordId} not found in our registry.");
+    }
+
+    // Security check for mothers: ensure they can only view their own records
+    if ($_SESSION['role'] === 'mother') {
+        $checkStmt = $pdo->prepare("SELECT user_id FROM mothers WHERE id = ?");
+        $checkStmt->execute([$record['mother_id']]);
+        $recordOwnerUserId = $checkStmt->fetchColumn();
+        
+        if ($recordOwnerUserId != $_SESSION['user_id']) {
+            http_response_code(403);
+            echo '<div class="p-12 text-center bg-rose-50 rounded-[2.5rem] border border-rose-100">
+                    <div class="w-20 h-20 bg-rose-100 text-rose-500 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6 shadow-lg shadow-rose-100">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-rose-900 mb-2">Unauthorized Access</h3>
+                    <p class="text-sm text-rose-600 font-medium">You are only permitted to view your own health records.</p>
+                  </div>';
+            exit();
+        }
     }
 
     // 2. Fetch History Summary (for Timeline/Context)
