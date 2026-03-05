@@ -124,6 +124,10 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
         .modal-body::-webkit-scrollbar { width: 4px; }
         .modal-body::-webkit-scrollbar-track { background: transparent; }
         .modal-body::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        /* Uniform modal width (matches max-w-4xl = 56rem) */
+        #prenatalModal .modal-dialog,
+        #postnatalModal .modal-dialog,
+        #visitDetailModal .modal-dialog { max-width: 56rem; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-full">
@@ -422,19 +426,19 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
 
     <!-- Modals (Backwards compatibility with Bootstrap JS for now) -->
     <div class="modal fade" id="prenatalModal" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content overflow-hidden border-0 rounded-[2rem] shadow-2xl"></div>
         </div>
     </div>
     <div class="modal fade" id="postnatalModal" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content overflow-hidden border-0 rounded-[2rem] shadow-2xl"></div>
         </div>
     </div>
 
     <!-- Specific Visit Detail Modal -->
     <div class="modal fade" id="visitDetailModal" tabindex="-1" style="z-index: 1060;">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content overflow-hidden border-0 rounded-[2.5rem] shadow-2xl bg-slate-50">
                 <div class="modal-header border-0 px-8 pt-8 pb-0 bg-transparent flex justify-end">
                     <button type="button" class="w-12 h-12 rounded-2xl bg-white shadow-soft flex items-center justify-center text-slate-400 hover:text-rose-500 transition-all active:scale-90" data-bs-dismiss="modal">
