@@ -93,6 +93,7 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mother's Portal - Health Station System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php include_once __DIR__ . '/../includes/tailwind_config.php'; ?>
     <style type="text/tailwindcss">
@@ -110,6 +111,19 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
             .timeline-dot-inactive { @apply bg-slate-200; }
             .timeline-dot-completed { @apply bg-emerald-500 scale-110; }
         }
+    </style>
+    <style>
+        /* Prevent Bootstrap global resets from breaking Tailwind layout */
+        body { font-family: inherit !important; }
+        *, *::before, *::after { box-sizing: border-box; }
+        /* Ensure Bootstrap modals get proper z-index above sticky header */
+        .modal-backdrop { z-index: 1040 !important; }
+        .modal { z-index: 1050 !important; }
+        #visitDetailModal { z-index: 1060 !important; }
+        /* Clean modal scrollbar */
+        .modal-body::-webkit-scrollbar { width: 4px; }
+        .modal-body::-webkit-scrollbar-track { background: transparent; }
+        .modal-body::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-full">
