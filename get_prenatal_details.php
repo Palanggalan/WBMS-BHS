@@ -4,7 +4,9 @@
  * Premium clinical dashboard UI for prenatal record details
  */
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);       // Don't output errors into AJAX response
+ini_set('log_errors', 1);           // Log errors server-side instead
+ini_set('session.gc_probability', 0); // Disable GC to avoid /php_sessions permission error
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
