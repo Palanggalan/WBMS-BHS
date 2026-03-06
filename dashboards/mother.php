@@ -26,10 +26,18 @@ $motherData = $mother->fetch(PDO::FETCH_ASSOC);
 if (!$motherData) {
     $showRegistrationPrompt = true;
     $mother = [
-        'first_name' => $_SESSION['first_name'],
-        'last_name' => $_SESSION['last_name'],
+        'first_name' => $_SESSION['first_name'] ?? 'Mother',
+        'last_name' => $_SESSION['last_name'] ?? '',
         'id' => null
     ];
+    
+    // Initialize stats for users without profiles
+    $isPregnant = false;
+    $weeksPregnant = 0;
+    $prenatalCount = 0;
+    $birthRecords = [];
+    $postnatalCount = 0;
+    $nextAppointment = null;
 } else {
     $mother = $motherData;
     $showRegistrationPrompt = false;
