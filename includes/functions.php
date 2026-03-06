@@ -72,4 +72,11 @@ function logActivity($userId, $activity) {
 function prettyDate($date) {
     return date('M j, Y', strtotime($date));
 }
+
+function hasMotherProfile($userId) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id FROM mothers WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    return $stmt->fetch() ? true : false;
+}
 ?>

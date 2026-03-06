@@ -9,6 +9,12 @@ if (!canRegisterOwnProfile()) {
 
 redirectIfNotLoggedIn();
 
+// Check if mother profile already exists
+if (hasMotherProfile($_SESSION['user_id'])) {
+    header("Location: ../dashboard.php");
+    exit();
+}
+
 global $pdo;
 
 $message = '';

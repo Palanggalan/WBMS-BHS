@@ -34,10 +34,12 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
                 <i class="fas fa-baby w-5 text-center <?= ($currentPage == 'birth_registration.php') ? 'text-rose-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
                 <span>Birth Registration</span>
             </a>
+            <?php if (!hasMotherProfile($_SESSION['user_id'])): ?>
             <a href="<?= $baseUrl ?>/forms/mother_self_registration.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= ($currentPage == 'mother_self_registration.php') ? 'bg-rose-50 text-rose-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
                 <i class="fas fa-user-edit w-5 text-center <?= ($currentPage == 'mother_self_registration.php') ? 'text-rose-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
                 <span>My Profile</span>
             </a>
+            <?php endif; ?>
             <a href="<?= $baseUrl ?>/library.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= ($currentPage == 'library.php') ? 'bg-rose-50 text-rose-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
                 <i class="fas fa-book-medical w-5 text-center <?= ($currentPage == 'library.php') ? 'text-rose-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
                 <span>Health Library</span>
