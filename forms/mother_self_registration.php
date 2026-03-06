@@ -204,31 +204,34 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mother Profile Registration | Kibenes eBirth</title>
-    <!-- Modern Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS Components -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        health: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 
-                            300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9', 
-                            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e'
-                        }
-                    },
-                    fontFamily: { inter: ['Inter', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <?php include_once __DIR__ . '/../includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .section-header {
+                @apply flex items-center gap-3 py-4 border-b border-slate-100 mb-6;
+            }
+            .section-icon {
+                @apply w-10 h-10 bg-health-50 text-health-600 rounded-xl flex items-center justify-center text-lg;
+            }
+            .form-input-premium {
+                @apply w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-health-500 focus:ring-4 focus:ring-health-500/10 outline-none transition-all duration-200 bg-white;
+            }
+            .form-label-premium {
+                @apply block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1;
+            }
+            .card-premium {
+                @apply bg-white rounded-[2rem] border border-slate-100 shadow-sm shadow-slate-200/50 p-8;
+            }
+            .info-box {
+                @apply bg-slate-50 rounded-2xl p-6 border border-slate-100;
+            }
+        }
+    </style>
 </head>
-<body class="bg-health-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
+<body class="bg-slate-50 min-h-full font-inter selection:bg-health-100 selection:text-health-700">
     <?php include_once INCLUDE_PATH . 'header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
@@ -236,49 +239,46 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
             <!-- Header Section -->
-            <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="space-y-1">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                <div>
                     <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                        <span class="w-12 h-12 rounded-2xl bg-health-600 flex items-center justify-center shadow-lg shadow-health-200">
-                            <i class="fas fa-id-card text-white text-xl"></i>
-                        </span>
+                        <i class="fas fa-id-card text-health-600"></i>
                         Register Mother Profile
                     </h1>
-                    <p class="text-slate-500 font-medium flex items-center gap-2">
-                        <i class="fas fa-sparkles text-health-400"></i>
+                    <p class="text-slate-500 font-medium mt-1">
                         Create your official health tracking profile
                     </p>
                 </div>
-            </header>
+                <div class="flex items-center gap-3">
+                    <div class="px-4 py-2 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        Ref: WBMS-SR-<?= date('Y') ?>
+                    </div>
+                </div>
+            </div>
 
             <?php if ($message): ?>
-                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-4 text-emerald-700 font-bold animate-in fade-in slide-in-from-top-4 duration-500">
-                    <i class="fas fa-check-circle text-emerald-500 text-xl"></i>
-                    <div><?php echo $message; ?></div>
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top duration-500">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="font-bold text-sm"><?php echo $message; ?></div>
                 </div>
             <?php endif; ?>
-
+            
             <?php if ($error): ?>
-                <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-center gap-4 text-rose-700 font-bold animate-in fade-in slide-in-from-top-4 duration-500">
-                    <i class="fas fa-exclamation-circle text-rose-500 text-xl"></i>
-                    <div><?php echo $error; ?></div>
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 flex items-center gap-3 text-rose-800 animate-in fade-in slide-in-from-top duration-500">
+                    <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <p class="font-bold text-sm"><?php echo $error; ?></p>
                 </div>
             <?php endif; ?>
 
-            <div class="p-6 bg-health-600 rounded-[2rem] shadow-xl shadow-health-100 relative overflow-hidden group">
-                <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-500"></div>
-                <div class="relative flex items-start gap-4 text-white">
-                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-md">
-                        <i class="fas fa-info text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold">Registration Overview</h3>
-                        <p class="text-white/80 text-sm leading-relaxed max-w-2xl">
-                            You are creating your own mother profile. This information will be used for prenatal and postnatal care tracking.
-                            Please ensure all details are accurate, especially medical dates.
-                        </p>
-                    </div>
+            <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 flex items-center gap-3 text-sky-800">
+                <div class="w-8 h-8 bg-sky-100 rounded-lg flex items-center justify-center text-sm">
+                    <i class="fas fa-info-circle"></i>
                 </div>
+                <p class="text-sm font-medium">Fields marked with <span class="text-rose-500 font-bold">*</span> are required for official health documentation.</p>
             </div>
 
             <form method="POST" action="" id="motherRegistrationForm" class="space-y-8" novalidate>
@@ -287,11 +287,11 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-user text-health-600"></i>
+                            <i class="fas fa-user-pregnant text-health-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Personal Information</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Basic identity details</p>
+                            <h2 class="text-xl font-bold text-slate-800">Maternal Personal Data</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Primary identification information</p>
                         </div>
                     </div>
 
@@ -392,11 +392,11 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-map-marked-alt text-health-600"></i>
+                            <i class="fas fa-phone-office text-health-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Contact & Address</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Where we can reach you</p>
+                            <h2 class="text-xl font-bold text-slate-800">Contact & Address Data</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Reliable reachability and emergency details</p>
                         </div>
                     </div>
 
@@ -453,11 +453,11 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-briefcase-medical text-health-600"></i>
+                            <i class="fas fa-notes-medical text-health-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Medical Information</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Primary health markers</p>
+                            <h2 class="text-xl font-bold text-slate-800">Maternal Medical Profile</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Clinical history and health indicators</p>
                         </div>
                     </div>
 
@@ -520,11 +520,11 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-user-friends text-health-600"></i>
+                            <i class="fas fa-mars text-health-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Husband / Partner Information</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Spouse or partner identification</p>
+                            <h2 class="text-xl font-bold text-slate-800">Husband/Partner's Profile Data</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Retrieved from verified family records</p>
                         </div>
                     </div>
 
@@ -610,11 +610,11 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-baby-carriage text-health-600"></i>
+                            <i class="fas fa-baby text-health-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Pregnancy Information</h2>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Clinical obstetric tracking</p>
+                            <h2 class="text-xl font-bold text-slate-800">Pregnancy & Gestation Data</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Clinical data for current and past pregnancies</p>
                         </div>
                     </div>
 
@@ -711,9 +711,9 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
                         Cancel Registration
                     </button>
                     <button type="submit" 
-                            class="w-full sm:w-auto px-16 py-4 bg-health-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-health-700 shadow-xl shadow-health-200 transition-all active:scale-95 flex items-center justify-center gap-3">
-                        <i class="fas fa-plus shadow-sm"></i>
-                        Create My Profile
+                            class="w-full sm:w-auto px-16 py-4 bg-health-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-health-700 shadow-xl shadow-health-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fas fa-save shadow-sm"></i>
+                        Complete Registration
                     </button>
                 </div>
                         </form>
@@ -724,8 +724,6 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Calculate EDC based on LMP
-        document.getElementById('lmp').addEventListener('change', function() {
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('motherRegistrationForm');
             const lmpInput = document.getElementById('lmp');
