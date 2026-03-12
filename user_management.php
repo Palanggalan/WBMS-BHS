@@ -319,9 +319,9 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                     <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.3em]">User Registry Center</h3>
                     
                     <div class="flex flex-wrap gap-2" id="userTabs" role="tablist">
-                        <button onclick="switchTab('pending')" class="tab-btn tab-btn-inactive" id="pending-tab">
-                            <i class="fas fa-clock"></i>
-                            Pending <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $pendingCount; ?></span>
+                        <button onclick="switchTab('all')" class="tab-btn tab-btn-active" id="all-tab">
+                            <i class="fas fa-users-viewfinder"></i>
+                            All <span class="bg-white/20 px-2 py-0.5 rounded-lg ml-1"><?= $totalCount; ?></span>
                         </button>
                         <button onclick="switchTab('active')" class="tab-btn tab-btn-inactive" id="active-tab">
                             <i class="fas fa-check-circle"></i>
@@ -335,78 +335,76 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                             <i class="fas fa-times-circle"></i>
                             Rejected <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $rejectedCount; ?></span>
                         </button>
-                        <button onclick="switchTab('all')" class="tab-btn tab-btn-active" id="all-tab">
-                            <i class="fas fa-users-viewfinder"></i>
-                            All <span class="bg-white/20 px-2 py-0.5 rounded-lg ml-1"><?= $totalCount; ?></span>
+                        <button onclick="switchTab('pending')" class="tab-btn tab-btn-inactive" id="pending-tab">
+                            <i class="fas fa-clock"></i>
+                            Pending <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $pendingCount; ?></span>
                         </button>
                     </div>
                 </div>
 
                 <div class="card-premium">
                     <div id="userTabsContent">
-                        <!-- Pending Users Tab -->
-                        <div class="tab-content-item hidden" id="pending-content">
-                            <?php $pendingUsers = array_filter($users, fn($u) => $u['status'] === 'pending'); ?>
-                            <?php if (!empty($pendingUsers)): ?>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full table-modern">
-                                        <thead>
-                                            <tr>
-                                                <th>User Profile</th>
-                                                <th>Access Details</th>
-                                                <th>Clinical Role</th>
-                                                <th>Registration</th>
-                                                <th class="text-right">Care Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($pendingUsers as $user): ?>
-                                            <tr class="hover:bg-slate-50/50 transition-colors group">
-                                                <td class="py-5">
-                                                    <div class="flex items-center gap-4">
-                                                        <div class="user-avatar-premium bg-amber-500 text-white shadow-amber-100">
-                                                            <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
-                                                        </div>
-                                                        <div class="flex flex-col">
-                                                            <span class="font-bold text-slate-800 tracking-tight group-hover:text-health-700 transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
-                                                            <span class="text-[10px] font-medium text-slate-400 italic">Waiting approval</span>
-                                                        </div>
+                        <!-- All Users Tab -->
+                        <div class="tab-content-item" id="all-content">
+                            <div class="overflow-x-auto">
+                                <table class="w-full table-modern">
+                                    <thead>
+                                        <tr>
+                                            <th>User Profile</th>
+                                            <th>Clinical Role</th>
+                                            <th>Status</th>
+                                            <th>Registration</th>
+                                            <th class="text-right">Care Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($users as $user): ?>
+                                        <tr class="hover:bg-slate-50/50 transition-colors group">
+                                            <td class="py-5">
+                                                <div class="flex items-center gap-4">
+                                                    <?php 
+                                                        $avatarColor = match($user['status']) {
+                                                            'active' => 'bg-health-600',
+                                                            'pending' => 'bg-amber-500',
+                                                            'suspended' => 'bg-slate-400',
+                                                            'rejected' => 'bg-slate-200',
+                                                            default => 'bg-slate-200'
+                                                        };
+                                                    ?>
+                                                    <div class="user-avatar-premium <?= $avatarColor; ?> text-white font-bold">
+                                                        <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
                                                     </div>
-                                                </td>
-                                                <td>
                                                     <div class="flex flex-col">
-                                                        <span class="text-xs font-bold text-slate-600">@<?= htmlspecialchars($user['username']); ?></span>
-                                                        <span class="text-[10px] text-slate-400"><?= htmlspecialchars($user['email']); ?></span>
+                                                        <span class="font-bold text-slate-800 tracking-tight group-hover:text-health-700 transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
+                                                        <span class="text-[10px] font-medium text-slate-400">@<?= htmlspecialchars($user['username']); ?></span>
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
-                                                </td>
-                                                <td><span class="text-xs font-medium text-slate-500"><?= date('M j, Y', strtotime($user['created_at'])); ?></span></td>
-                                                <td class="text-right">
-                                                    <div class="flex justify-end gap-2">
-                                                        <button onclick="confirmAction('approve', <?= $user['id']; ?>)" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-emerald-100 active:scale-90" title="Approve">
-                                                            <i class="fas fa-check"></i>
-                                                        </button>
-                                                        <button onclick="confirmAction('reject', <?= $user['id']; ?>)" class="bg-rose-500 hover:bg-rose-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-rose-100 active:scale-90" title="Reject">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
-                                                        <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-sky-100 active:scale-90" title="Edit">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php else: ?>
-                                <div class="text-center py-10 opacity-50">
-                                    <i class="fas fa-user-clock text-4xl mb-4 text-slate-300"></i>
-                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No pending approvals found</p>
-                                </div>
-                            <?php endif; ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
+                                            </td>
+                                            <td>
+                                                <?php if ($user['status'] === 'active'): ?>
+                                                <span class="text-emerald-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Active</span>
+                                                <?php elseif ($user['status'] === 'pending'): ?>
+                                                <span class="text-amber-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div> Pending</span>
+                                                <?php elseif ($user['status'] === 'suspended'): ?>
+                                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">Suspended</span>
+                                                <?php elseif ($user['status'] === 'rejected'): ?>
+                                                <span class="text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">Rejected</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><span class="text-xs font-medium text-slate-500"><?= date('M j, Y', strtotime($user['created_at'])); ?></span></td>
+                                            <td class="text-right">
+                                                <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-health-600 p-2.5 rounded-xl transition-all active:scale-90" title="Advanced Edit">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         <!-- Active Users Tab -->
@@ -595,67 +593,69 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                             <?php endif; ?>
                         </div>
 
-                        <!-- All Users Tab -->
-                        <div class="tab-content-item" id="all-content">
-                            <div class="overflow-x-auto">
-                                <table class="w-full table-modern">
-                                    <thead>
-                                        <tr>
-                                            <th>User Profile</th>
-                                            <th>Clinical Role</th>
-                                            <th>Status</th>
-                                            <th>Registration</th>
-                                            <th class="text-right">Care Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($users as $user): ?>
-                                        <tr class="hover:bg-slate-50/50 transition-colors group">
-                                            <td class="py-5">
-                                                <div class="flex items-center gap-4">
-                                                    <?php 
-                                                        $avatarColor = match($user['status']) {
-                                                            'active' => 'bg-health-600',
-                                                            'pending' => 'bg-amber-500',
-                                                            'suspended' => 'bg-slate-400',
-                                                            'rejected' => 'bg-slate-200',
-                                                            default => 'bg-slate-200'
-                                                        };
-                                                    ?>
-                                                    <div class="user-avatar-premium <?= $avatarColor; ?> text-white font-bold">
-                                                        <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                        <!-- Pending Users Tab -->
+                        <div class="tab-content-item hidden" id="pending-content">
+                            <?php $pendingUsers = array_filter($users, fn($u) => $u['status'] === 'pending'); ?>
+                            <?php if (!empty($pendingUsers)): ?>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th>User Profile</th>
+                                                <th>Access Details</th>
+                                                <th>Clinical Role</th>
+                                                <th>Registration</th>
+                                                <th class="text-right">Care Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($pendingUsers as $user): ?>
+                                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                                <td class="py-5">
+                                                    <div class="flex items-center gap-4">
+                                                        <div class="user-avatar-premium bg-amber-500 text-white shadow-amber-100">
+                                                            <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                                                        </div>
+                                                        <div class="flex flex-col">
+                                                            <span class="font-bold text-slate-800 tracking-tight group-hover:text-health-700 transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
+                                                            <span class="text-[10px] font-medium text-slate-400 italic">Waiting approval</span>
+                                                        </div>
                                                     </div>
+                                                </td>
+                                                <td>
                                                     <div class="flex flex-col">
-                                                        <span class="font-bold text-slate-800 tracking-tight group-hover:text-health-700 transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
-                                                        <span class="text-[10px] font-medium text-slate-400">@<?= htmlspecialchars($user['username']); ?></span>
+                                                        <span class="text-xs font-bold text-slate-600">@<?= htmlspecialchars($user['username']); ?></span>
+                                                        <span class="text-[10px] text-slate-400"><?= htmlspecialchars($user['email']); ?></span>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
-                                            </td>
-                                            <td>
-                                                <?php if ($user['status'] === 'active'): ?>
-                                                <span class="text-emerald-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Active</span>
-                                                <?php elseif ($user['status'] === 'pending'): ?>
-                                                <span class="text-amber-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div> Pending</span>
-                                                <?php elseif ($user['status'] === 'suspended'): ?>
-                                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">Suspended</span>
-                                                <?php elseif ($user['status'] === 'rejected'): ?>
-                                                <span class="text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">Rejected</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><span class="text-xs font-medium text-slate-500"><?= date('M j, Y', strtotime($user['created_at'])); ?></span></td>
-                                            <td class="text-right">
-                                                <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-health-600 p-2.5 rounded-xl transition-all active:scale-90" title="Advanced Edit">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                                </td>
+                                                <td>
+                                                    <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
+                                                </td>
+                                                <td><span class="text-xs font-medium text-slate-500"><?= date('M j, Y', strtotime($user['created_at'])); ?></span></td>
+                                                <td class="text-right">
+                                                    <div class="flex justify-end gap-2">
+                                                        <button onclick="confirmAction('approve', <?= $user['id']; ?>)" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-emerald-100 active:scale-90" title="Approve">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>
+                                                        <button onclick="confirmAction('reject', <?= $user['id']; ?>)" class="bg-rose-500 hover:bg-rose-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-rose-100 active:scale-90" title="Reject">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                        <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-sky-100 active:scale-90" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php else: ?>
+                                <div class="text-center py-10 opacity-50">
+                                    <i class="fas fa-user-clock text-4xl mb-4 text-slate-300"></i>
+                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No pending approvals found</p>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
